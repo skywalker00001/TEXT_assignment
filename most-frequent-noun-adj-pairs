@@ -1,0 +1,100 @@
+import spacy
+from collections import Counter
+
+nlp = spacy.load("en_core_web_sm")
+
+rating_1_reviews = []
+rating_2_reviews = []
+rating_3_reviews = []
+rating_4_reviews = []
+rating_5_reviews = []
+
+with open('./yelp_academic_dataset_review.json', encoding='utf-8') as f:
+    for line in f:
+        line_contents = json.loads(line)
+        if int(line_contents['stars']) == 1:
+            if len(rating_1_reviews) < 100:
+                rating_1_reviews.append(line_contents['text'])
+        elif int(line_contents['stars']) == 2:
+            if len(rating_2_reviews) < 100:
+                rating_2_reviews.append(line_contents['text'])
+        elif int(line_contents['stars']) == 3:
+            if len(rating_3_reviews) < 100:
+                rating_3_reviews.append(line_contents['text'])
+        elif int(line_contents['stars']) == 4:
+            if len(rating_4_reviews) < 100:
+                rating_4_reviews.append(line_contents['text'])
+        elif int(line_contents['stars']) == 5:
+            if len(rating_5_reviews) < 100:
+                rating_5_reviews.append(line_contents['text'])
+
+rating_1_noun_adj_pairs = []
+rating_2_noun_adj_pairs = []
+rating_3_noun_adj_pairs = []
+rating_4_noun_adj_pairs = []
+rating_5_noun_adj_pairs = []
+
+for review in rating_1_reviews:
+    doc = nlp(review)
+    for i,token in enumerate(doc):
+        if token.pos_ not in ('NOUN','PROPN'):
+            continue
+        for j in range(i+1,len(doc)):
+            if doc[j].pos_ == 'ADJ':
+                rating_1_noun_adj_pairs.append(str(token) + '-' + str(doc[j]))
+                break
+
+rating_2_noun_adj_pairs = []
+for review in rating_2_reviews:
+    doc = nlp(review)
+    for i,token in enumerate(doc):
+        if token.pos_ not in ('NOUN','PROPN'):
+            continue
+        for j in range(i+1,len(doc)):
+            if doc[j].pos_ == 'ADJ':
+                rating_2_noun_adj_pairs.append(str(token) + '-' + str(doc[j]))
+                break
+                
+rating_3_noun_adj_pairs = []
+for review in rating_3_reviews:
+    doc = nlp(review)
+    for i,token in enumerate(doc):
+        if token.pos_ not in ('NOUN','PROPN'):
+            continue
+        for j in range(i+1,len(doc)):
+            if doc[j].pos_ == 'ADJ':
+                rating_3_noun_adj_pairs.append(str(token) + '-' + str(doc[j]))
+                break
+
+
+for review in rating_4_reviews:
+    doc = nlp(review)
+    for i,token in enumerate(doc):
+        if token.pos_ not in ('NOUN','PROPN'):
+            continue
+        for j in range(i+1,len(doc)):
+            if doc[j].pos_ == 'ADJ':
+                rating_4_noun_adj_pairs.append(str(token) + '-' + str(doc[j]))
+                break
+
+
+for review in rating_5_reviews:
+    doc = nlp(review)
+    for i,token in enumerate(doc):
+        if token.pos_ not in ('NOUN','PROPN'):
+            continue
+        for j in range(i+1,len(doc)):
+            if doc[j].pos_ == 'ADJ':
+                rating_5_noun_adj_pairs.append(str(token) + '-' + str(doc[j]))
+                break
+
+print('-----------rating: 1-------------')
+print(Counter(rating_1_noun_adj_pairs).most_common(10))
+print('-----------rating: 2-------------')
+print(Counter(rating_2_noun_adj_pairs).most_common(10))
+print('-----------rating: 3-------------')
+print(Counter(rating_3_noun_adj_pairs).most_common(10))
+print('-----------rating: 4-------------')
+print(Counter(rating_4_noun_adj_pairs).most_common(10))
+print('-----------rating: 5-------------')
+print(Counter(rating_5_noun_adj_pairs).most_common(10))
